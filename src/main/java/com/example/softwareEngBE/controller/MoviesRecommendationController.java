@@ -3,6 +3,7 @@ package com.example.softwareEngBE.controller;
 import com.example.softwareEngBE.dto.MoviesDto;
 import com.example.softwareEngBE.entity.Movies;
 import com.example.softwareEngBE.repository.MoviesRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ public class MoviesRecommendationController {
     private MoviesRepository moviesRepository;
 
     @GetMapping("/recommend/{movieId}")
+    @Operation(summary = "시청한 영화를 기반으로 유사한 장르의 영화 추천",
+            description = "특정 영화를 시청한 후 해당 영화의 장르와 유사한 장르를 가진 다른 영화를 추천합니다.")
     public ResponseEntity<List<MoviesDto>> recommendMoviesBasedOnWatched(@PathVariable Integer movieId) {
         Movies watchedMovie = moviesRepository.findById(movieId).orElse(null);
         if (watchedMovie == null) {
