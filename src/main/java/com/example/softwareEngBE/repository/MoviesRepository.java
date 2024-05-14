@@ -16,4 +16,5 @@ public interface MoviesRepository extends JpaRepository<Movies,Integer> {
             nativeQuery = true)
     Movies findByTitletoId(String title);
     List<Movies> findByTitleContaining(String title);
+    List<Movies> findByGenresContainingIgnoreCase(String genre);
 }
