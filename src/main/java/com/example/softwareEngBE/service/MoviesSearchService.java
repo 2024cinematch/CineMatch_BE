@@ -32,6 +32,30 @@ public class MoviesSearchService {
         return moviesDtoList;
     }
 
+//    // 선택한 장르에 해당하는 모든 영화를 평점 순으로 가져오는 메서드
+//    public List<MoviesDto> getMoviesByGenreOrderByRating(String genre) {
+//        List<Movies> movies = moviesRepository.findByGenresContainingIgnoreCase(genre);
+//
+//        // 영화를 평점 순으로 정렬하여 MoviesDto 리스트로 매핑
+//        List<MoviesDto> moviesDtos = movies.stream()
+//                .sorted((m1, m2) -> Float.compare(m2.getRating(), m1.getRating())) // 평점 역순 정렬
+//                .map(MoviesDto::createMoviesDto)
+//                .collect(Collectors.toList());
+//
+//        return moviesDtos;
+//    }
+
+    // 선택한 장르에 해당하는 모든 영화를 가져오는 메서드
+    public List<MoviesDto> getMoviesByGenre(String genre) {
+        List<Movies> movies = moviesRepository.findByGenresContainingIgnoreCase(genre);
+
+        // Movies 엔티티 리스트를 MoviesDto 리스트로 변환하여 반환
+        List<MoviesDto> moviesDtos = movies.stream()
+                .map(MoviesDto::createMoviesDto)
+                .collect(Collectors.toList());
+
+        return moviesDtos;
+    }
 
 //    //제목으로 찾기
 //    public List<MoviesDto> findByTitle(String title) {
@@ -60,9 +84,6 @@ public class MoviesSearchService {
         }
         return similarMovies;
     }
-
-
-
 
     //title로 id찾기 comment서비스에 필요함
     public int findByTitletoId(String title) {
