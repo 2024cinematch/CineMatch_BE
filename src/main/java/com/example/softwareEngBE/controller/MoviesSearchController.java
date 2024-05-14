@@ -29,7 +29,7 @@ public class MoviesSearchController {
     @GetMapping("/search/{title}")
     public ResponseEntity<List<MoviesDto>> getMovieDetails(@PathVariable String title)
     {
-        List<MoviesDto> moviesDto= moviesSearchService.findByTitle(title);
+        List<MoviesDto> moviesDto= moviesSearchService.findSimilarMoviesByTitle(title);
         if (moviesDto.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
