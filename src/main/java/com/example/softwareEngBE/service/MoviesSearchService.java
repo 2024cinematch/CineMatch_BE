@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static com.example.softwareEngBE.logic.CosineSimilarity.cosineSimilarity;
 
@@ -91,4 +92,18 @@ public class MoviesSearchService {
         MoviesDto moviesDto=MoviesDto.createMoviesDto(movie);
         return moviesDto.getMovie_Id();
     }
+    
+    // 영화 제목으로 영화 정보(제목과 장르, 평점)를 가져오는 메서드
+    public MoviesDto getMovieByTitle(String title) {
+        Movies movie = moviesRepository.findDetailByTitle(title);
+        if (movie != null) {
+            return MoviesDto.createMoviesDto(movie);
+        } else {
+            // 해당 제목의 영화를 찾지 못한 경우
+            return null; // 예외 처리에 따라 적절한 값을 반환합니다.
+        }
+    }
+
+
+    
 }
