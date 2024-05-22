@@ -1,6 +1,9 @@
 package com.example.softwareEngBE.controller;
 
 import com.example.softwareEngBE.dto.CommentDto;
+import com.example.softwareEngBE.dto.MoviesDto;
+
+
 import com.example.softwareEngBE.service.CommentService;
 import com.example.softwareEngBE.service.MoviesSearchService;
 
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @ToString
 @Slf4j
 @RestController
@@ -40,5 +44,18 @@ public class CommentApiController {
 
         return ResponseEntity.status(HttpStatus.OK).body(commentDto);
     }
+    
+    @GetMapping("/api/movie/{title}")
+    public ResponseEntity<MoviesDto> getMovieByTitle(@PathVariable String title) {
+        MoviesDto movieDetail = moviesSearchService.getMovieByTitle(title);
+        if (movieDetail != null) {
+            return ResponseEntity.ok(movieDetail);
+        } else {
+            // 해당 제목의 영화를 찾지 못한 경우
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }
 
