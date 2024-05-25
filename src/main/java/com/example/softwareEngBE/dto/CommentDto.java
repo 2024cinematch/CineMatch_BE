@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 @Setter
-
 public class CommentDto {
     @JsonProperty("id")
     private long user_Id;

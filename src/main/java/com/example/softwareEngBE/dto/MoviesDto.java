@@ -11,7 +11,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-
 public class MoviesDto {
     private int movie_Id;
     private String title;

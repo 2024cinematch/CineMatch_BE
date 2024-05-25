@@ -9,7 +9,6 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Movies {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
