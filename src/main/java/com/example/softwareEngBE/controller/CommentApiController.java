@@ -36,4 +36,3 @@ public class CommentApiController {
         return ResponseEntity.status(HttpStatus.OK).body(commentDto);
     }
 }
-
