@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
-import static com.example.softwareEngBE.logic.CosineSimilarity.cosineSimilarity;
 
 
 @Service
@@ -68,23 +68,21 @@ public class MoviesSearchService {
 //        return moviesDtoList;
 //    }
 
-    // 코사인 유사도 기반의 유사 제목 검색
-    public List<MoviesDto> findSimilarMoviesByTitle(String inputTitle) {
-        // 데이터베이스에서 제목의 일부를 포함하는 영화들을 먼저 검색
-        List<Movies> filteredMovies = moviesRepository.findByTitleContaining(inputTitle);
-        List<MoviesDto> similarMovies = new ArrayList<>();
-        CosineSimilarity.initializeGlobalWordSet(filteredMovies.stream().map(Movies::getTitle).collect(Collectors.toList()));
 
-        // 입력 제목과 각 영화 제목 간의 유사도를 계산하여 유사한 영화를 선택
-        for (Movies movie : filteredMovies) {
-            double similarity = cosineSimilarity(inputTitle, movie.getTitle());
-            // 유사도 임계값 설정
-            if (similarity > 0.1) {
-                similarMovies.add(MoviesDto.createMoviesDto(movie));
-            }
-        }
-        return similarMovies;
+    //Cosine 유사도로 검색
+    public List<MoviesDto> searchMoviesByTitle(String title) {
+        List<Movies> movies = moviesRepository.searchByTitleIgnoringCase(title);
+
+
+        List<MoviesDto> sortedMovies = movies.stream()
+                .sorted(Comparator.comparingInt(movie -> CosineSimilarity.computeLevenshteinDistance(
+                        movie.getTitle().replace(" ", "").toLowerCase(), title.replace(" ", "").toLowerCase())))
+                .map(MoviesDto::createMoviesDto)
+                .collect(Collectors.toList());
+
+        return sortedMovies;
     }
+
 
     //title로 id찾기 comment서비스에 필요함
     public int findByTitletoId(String title) {
