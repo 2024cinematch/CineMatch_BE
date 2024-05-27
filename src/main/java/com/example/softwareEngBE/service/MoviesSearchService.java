@@ -85,8 +85,8 @@ public class MoviesSearchService {
 
 
     //title로 id찾기 comment서비스에 필요함
-    public int findByTitletoId(String title) {
-        Movies movie =moviesRepository.findByTitletoId(title);
+    public int findByTitleToId(String title) {
+        Movies movie =moviesRepository.findByTitleToId(title);
         MoviesDto moviesDto=MoviesDto.createMoviesDto(movie);
         return moviesDto.getMovie_Id();
     }
