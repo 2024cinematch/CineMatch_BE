@@ -44,8 +44,10 @@ public class CommentApiController {
 
         return ResponseEntity.status(HttpStatus.OK).body(commentDto);
     }
-    
+
     @GetMapping("/api/movie/{title}")
+    @Operation(summary = "제목으로 영화 정보 가져오기",
+            description = "제공된 제목을 기반으로 영화 정보를 가져옵니다.")
     public ResponseEntity<MoviesDto> getMovieByTitle(@PathVariable String title) {
         MoviesDto movieDetail = moviesSearchService.getMovieByTitle(title);
         if (movieDetail != null) {
