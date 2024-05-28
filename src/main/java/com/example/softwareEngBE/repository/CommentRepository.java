@@ -3,6 +3,7 @@ package com.example.softwareEngBE.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.softwareEngBE.entity.Comment;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +16,13 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
             "where movie_Id = :id",
             nativeQuery = true)
     List<Comment> findByMovieId(int id);
+//    @Query(value = "SELECT c FROM Comment c WHERE c.movies.movie_Id = :movieId")
+//    List<Comment> findByMovieId(@Param("movieId") int movieId);
+
+    // 영화 제목으로 대소문자 구분 없이 댓글 조회
+    @Query("SELECT c FROM Comment c WHERE LOWER(c.movies.title) = LOWER(:title)")
+    List<Comment> findByMovieTitleIgnoreCase(@Param("title") String title);
+
     @Query(value = "SELECT DISTINCT user_id FROM comment", nativeQuery = true)
     List<Long> findAllUserIds();
 
