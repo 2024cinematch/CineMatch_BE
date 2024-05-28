@@ -19,15 +19,12 @@ public class Movies {
     private String title;
     @Column
     private String genres;
-//    @JoinColumn(name = "rating")
-//    private Float rating; // 영화 평점 필드 추가
 
     public static Movies createMovies(MoviesDto dto, CommentDto commentDto){
         return new Movies(
                 dto.getMovie_Id(),
                 dto.getTitle(),
                 dto.getGenres()
-//                commentDto.getRating()
         );
     }
 }

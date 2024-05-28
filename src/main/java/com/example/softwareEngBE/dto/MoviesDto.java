@@ -13,10 +13,12 @@ import lombok.ToString;
 @ToString
 
 public class MoviesDto {
+
     private int movie_Id;
+
     private String title;
+
     private String genres;
-//    private float rating;
 
     public static MoviesDto createMoviesDto(Movies movies)
     {
@@ -24,7 +26,6 @@ public class MoviesDto {
                 movies.getMovie_Id(),
                 movies.getTitle(),
                 movies.getGenres()
-//                movies.getRating());
         );
     }
 }
