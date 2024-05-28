@@ -14,8 +14,8 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .components(new Components())
-                .info(new Info().title("sopio app server api")
-                        .description("sopio app server api 문서입니다.")
+                .info(new Info().title("CineMatch server api")
+                        .description("CineMatch server api 문서입니다.")
                         .version("v1.0.0"));
     }
     @Bean
