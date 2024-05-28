@@ -39,7 +39,7 @@ public class CommentApiController {
             description = "특정 영화에 새로운 댓글을 추가합니다.")
     public ResponseEntity<CommentDto> addComment(@PathVariable String title,@RequestBody CommentDto dto) {
         log.info("received Dto{}",dto.toString());
-        int id= moviesSearchService.findByTitletoId(title);
+        int id= moviesSearchService.findByTitleToId(title);
         CommentDto commentDto=commentService.create(id,dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(commentDto);
