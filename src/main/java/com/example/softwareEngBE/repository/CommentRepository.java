@@ -10,14 +10,13 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment,Long> {
+
     //특정 게시글의 모든 댓글 조회
     @Query(value = "Select * " +
             "from comment " +
             "where movie_Id = :id",
             nativeQuery = true)
     List<Comment> findByMovieId(int id);
-//    @Query(value = "SELECT c FROM Comment c WHERE c.movies.movie_Id = :movieId")
-//    List<Comment> findByMovieId(@Param("movieId") int movieId);
 
     // 영화 제목으로 대소문자 구분 없이 댓글 조회
     @Query("SELECT c FROM Comment c WHERE LOWER(c.movies.title) = LOWER(:title)")
