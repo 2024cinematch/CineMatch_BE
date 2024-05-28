@@ -9,12 +9,15 @@ import java.util.List;
 
 @Repository
 public interface MoviesRepository extends JpaRepository<Movies,Integer> {
-    List<Movies> findByTitle(String title);
+    Movies findByTitle(String title);
     @Query(value = "Select * " +
             "from movies " +
             "where title = :title",
             nativeQuery = true)
-    Movies findByTitletoId(String title);
+    Movies findByTitleToId(String title);
     List<Movies> findByTitleContaining(String title);
     List<Movies> findByGenresContainingIgnoreCase(String genre);
+    Movies findDetailByTitleIgnoreCase(String title);
+    @Query("SELECT m FROM Movies m WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :title, '%'))")
+    List<Movies> searchByTitleIgnoringCase(String title);
 }

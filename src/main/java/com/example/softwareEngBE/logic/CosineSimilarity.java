@@ -1,64 +1,28 @@
 package com.example.softwareEngBE.logic;
 
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CosineSimilarity {
-    private static final Logger logger = LoggerFactory.getLogger(CosineSimilarity.class);
+    public static int computeLevenshteinDistance(String str1, String str2) {
+        int[][] distance = new int[str1.length() + 1][str2.length() + 1];
 
-    private static final Set<String> globalWordSet = new HashSet<>();
-
-    // 전역 단어 집합 생성 (초기화는 어플리케이션 시작 시 한 번 수행)
-    public static void initializeGlobalWordSet(List<String> allTitles) {
-        for (String title : allTitles) {
-            String[] words = title.toLowerCase().split("\\s+");
-            for (String word : words) {
-                globalWordSet.add(word);
-            }
+        for (int i = 0; i <= str1.length(); i++) {
+            distance[i][0] = i;
         }
-    }
-
-    public static double cosineSimilarity(String title1, String title2) {
-        RealVector vector1 = titleToVector(title1);
-        RealVector vector2 = titleToVector(title2);
-
-        double dotProduct = vector1.dotProduct(vector2);
-        double normProduct = vector1.getNorm() * vector2.getNorm();
-
-        if (normProduct == 0) {
-            logger.debug("Norm product is zero, titles: {} and {}", title1, title2);
-            return 0.0;
+        for (int j = 0; j <= str2.length(); j++) {
+            distance[0][j] = j;
         }
-        double similarity = dotProduct / normProduct;
-        logger.debug("Calculated cosine similarity between '{}' and '{}' is {}", title1, title2, similarity);
-        return similarity;
-    }
 
-    public static RealVector titleToVector(String title) {
-        Map<String, Integer> wordMap = new HashMap<>();
-        String[] words = title.toLowerCase().split("\\s+");
-        for (String word : words) {
-            if (globalWordSet.contains(word)) { // 전역 단어 집합에 있는 단어만 고려
-                wordMap.put(word, wordMap.getOrDefault(word, 0) + 1);
+        for (int i = 1; i <= str1.length(); i++) {
+            for (int j = 1; j <= str2.length(); j++) {
+                int cost = (str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1;
+                distance[i][j] = Math.min(Math.min(distance[i - 1][j] + 1, distance[i][j - 1] + 1), distance[i - 1][j - 1] + cost);
             }
         }
 
-        double[] vector = new double[globalWordSet.size()];
-        int i = 0;
-        for (String word : globalWordSet) {
-            vector[i++] = wordMap.getOrDefault(word, 0);
-        }
-        return new ArrayRealVector(vector);
+        return distance[str1.length()][str2.length()];
     }
 
 }

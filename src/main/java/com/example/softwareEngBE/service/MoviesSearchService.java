@@ -10,10 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
-import static com.example.softwareEngBE.logic.CosineSimilarity.cosineSimilarity;
 
 
 @Service
@@ -32,7 +33,7 @@ public class MoviesSearchService {
         return moviesDtoList;
     }
 
-//    // 선택한 장르에 해당하는 모든 영화를 평점 순으로 가져오는 메서드
+    // 선택한 장르에 해당하는 모든 영화를 평점 순으로 가져오는 메서드
 //    public List<MoviesDto> getMoviesByGenreOrderByRating(String genre) {
 //        List<Movies> movies = moviesRepository.findByGenresContainingIgnoreCase(genre);
 //
@@ -43,6 +44,16 @@ public class MoviesSearchService {
 //                .collect(Collectors.toList());
 //
 //        return moviesDtos;
+//    }
+
+//    // 선택한 장르에 해당하는 모든 영화를 평점순으로 조회
+//    public List<MoviesDto> getMoviesByGenreOrderByRating(String genre) {
+//        List<Movies> movies = moviesRepository.findByGenresContainingIgnoreCase(genre);
+//        // 영화를 평점이 높은 순서로 정렬하여 MoviesDto로 변환
+//        return movies.stream()
+//                .sorted((m1, m2) -> Float.compare(m2.getRating(), m1.getRating()))
+//                .map(MoviesDto::createMoviesDto)
+//                .collect(Collectors.toList());
 //    }
 
     // 선택한 장르에 해당하는 모든 영화를 가져오는 메서드
@@ -67,28 +78,40 @@ public class MoviesSearchService {
 //        return moviesDtoList;
 //    }
 
-    // 코사인 유사도 기반의 유사 제목 검색
-    public List<MoviesDto> findSimilarMoviesByTitle(String inputTitle) {
-        // 데이터베이스에서 제목의 일부를 포함하는 영화들을 먼저 검색
-        List<Movies> filteredMovies = moviesRepository.findByTitleContaining(inputTitle);
-        List<MoviesDto> similarMovies = new ArrayList<>();
-        CosineSimilarity.initializeGlobalWordSet(filteredMovies.stream().map(Movies::getTitle).collect(Collectors.toList()));
 
-        // 입력 제목과 각 영화 제목 간의 유사도를 계산하여 유사한 영화를 선택
-        for (Movies movie : filteredMovies) {
-            double similarity = cosineSimilarity(inputTitle, movie.getTitle());
-            // 유사도 임계값 설정
-            if (similarity > 0.1) {
-                similarMovies.add(MoviesDto.createMoviesDto(movie));
-            }
-        }
-        return similarMovies;
+    //Cosine 유사도로 검색
+    public List<MoviesDto> searchMoviesByTitle(String title) {
+        List<Movies> movies = moviesRepository.searchByTitleIgnoringCase(title);
+
+
+        List<MoviesDto> sortedMovies = movies.stream()
+                .sorted(Comparator.comparingInt(movie -> CosineSimilarity.computeLevenshteinDistance(
+                        movie.getTitle().replace(" ", "").toLowerCase(), title.replace(" ", "").toLowerCase())))
+                .map(MoviesDto::createMoviesDto)
+                .collect(Collectors.toList());
+
+        return sortedMovies;
     }
 
-    //title로 id찾기 comment서비스에 필요함
-    public int findByTitletoId(String title) {
-        Movies movie =moviesRepository.findByTitletoId(title);
+
+    //title로 id찾기 comment서비스에 필요
+    public int findByTitleToId(String title) {
+        Movies movie =moviesRepository.findByTitleToId(title);
         MoviesDto moviesDto=MoviesDto.createMoviesDto(movie);
         return moviesDto.getMovie_Id();
     }
+    
+    // 영화 제목으로 영화 정보(제목과 장르, 평점)를 가져오는 메서드
+    public MoviesDto getMovieByTitle(String title) {
+        Movies movie = moviesRepository.findDetailByTitleIgnoreCase(title);
+        if (movie != null) {
+            return MoviesDto.createMoviesDto(movie);
+        } else {
+            // 해당 제목의 영화를 찾지 못한 경우
+            return null; // 예외 처리에 따라 적절한 값을 반환합니다.
+        }
+    }
+
+
+    
 }

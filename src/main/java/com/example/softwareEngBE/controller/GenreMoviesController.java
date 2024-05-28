@@ -30,18 +30,4 @@ public class GenreMoviesController {
 
         return ResponseEntity.ok(movies);
     }
-
-//    // 선택한 장르에 해당하는 모든 영화를 평점순으로 조회
-//    @GetMapping("/genre/{genre}/movies")
-//    @Operation(summary = "장르별 영화 평점순 조회",
-//            description = "지정된 장르의 모든 영화를 평점이 높은 순서로 조회합니다.")
-//    public ResponseEntity<List<MoviesDto>> getMoviesByGenreOrderByRating(@PathVariable String genre) {
-//        List<MoviesDto> movies = moviesSearchService.getMoviesByGenreOrderByRating(genre);
-//
-//        if (movies.isEmpty()) {
-//            return ResponseEntity.noContent().build();
-//        }
-//
-//        return ResponseEntity.ok(movies);
-//    }
 }

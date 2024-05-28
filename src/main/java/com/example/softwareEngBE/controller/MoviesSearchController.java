@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,12 +33,11 @@ public class MoviesSearchController {
     @GetMapping("/search/{title}")
     @Operation(summary = "영화 제목으로 유사한 영화 검색",
             description = "특정 영화 제목과 유사한 영화 목록을 검색합니다.")
-    public ResponseEntity<List<MoviesDto>> getMovieDetails(@PathVariable String title)
-    {
-        List<MoviesDto> moviesDto= moviesSearchService.findSimilarMoviesByTitle(title);
-        if (moviesDto.isEmpty()) {
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<List<MoviesDto>> searchMovies(@PathVariable(required = false) String title) {
+        if (title == null || title.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok(moviesDto);
+        List<MoviesDto> movies = moviesSearchService.searchMoviesByTitle(title);
+        return ResponseEntity.ok(movies);
     }
 }
