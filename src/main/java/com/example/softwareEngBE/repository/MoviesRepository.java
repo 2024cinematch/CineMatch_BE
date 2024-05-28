@@ -17,7 +17,7 @@ public interface MoviesRepository extends JpaRepository<Movies,Integer> {
     Movies findByTitleToId(String title);
     List<Movies> findByTitleContaining(String title);
     List<Movies> findByGenresContainingIgnoreCase(String genre);
-    Movies findDetailByTitle(String title);
+    Movies findDetailByTitleIgnoreCase(String title);
     @Query("SELECT m FROM Movies m WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<Movies> searchByTitleIgnoringCase(String title);
 }
