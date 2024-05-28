@@ -33,7 +33,7 @@ public class MoviesSearchService {
         return moviesDtoList;
     }
 
-//    // 선택한 장르에 해당하는 모든 영화를 평점 순으로 가져오는 메서드
+    // 선택한 장르에 해당하는 모든 영화를 평점 순으로 가져오는 메서드
 //    public List<MoviesDto> getMoviesByGenreOrderByRating(String genre) {
 //        List<Movies> movies = moviesRepository.findByGenresContainingIgnoreCase(genre);
 //
@@ -44,6 +44,16 @@ public class MoviesSearchService {
 //                .collect(Collectors.toList());
 //
 //        return moviesDtos;
+//    }
+
+//    // 선택한 장르에 해당하는 모든 영화를 평점순으로 조회
+//    public List<MoviesDto> getMoviesByGenreOrderByRating(String genre) {
+//        List<Movies> movies = moviesRepository.findByGenresContainingIgnoreCase(genre);
+//        // 영화를 평점이 높은 순서로 정렬하여 MoviesDto로 변환
+//        return movies.stream()
+//                .sorted((m1, m2) -> Float.compare(m2.getRating(), m1.getRating()))
+//                .map(MoviesDto::createMoviesDto)
+//                .collect(Collectors.toList());
 //    }
 
     // 선택한 장르에 해당하는 모든 영화를 가져오는 메서드
@@ -86,14 +96,14 @@ public class MoviesSearchService {
 
     //title로 id찾기 comment서비스에 필요함
     public int findByTitletoId(String title) {
-        Movies movie =moviesRepository.findByTitletoId(title);
+        Movies movie =moviesRepository.findByTitleToId(title);
         MoviesDto moviesDto=MoviesDto.createMoviesDto(movie);
         return moviesDto.getMovie_Id();
     }
     
     // 영화 제목으로 영화 정보(제목과 장르, 평점)를 가져오는 메서드
     public MoviesDto getMovieByTitle(String title) {
-        Movies movie = moviesRepository.findDetailByTitle(title);
+        Movies movie = moviesRepository.findDetailByTitleIgnoreCase(title);
         if (movie != null) {
             return MoviesDto.createMoviesDto(movie);
         } else {
